@@ -26,7 +26,7 @@ async function loadTickets() {
 
         tickets.forEach(t => {
             tableBody.innerHTML += `
-                <tr>
+                <tr data-id="${t.id}" style="cursor.pointer">
                     <td>${t.id}</td>
                     <td>${t.title}</td>
                     <td>${t.category}</td>
@@ -51,4 +51,10 @@ async function loadTickets() {
 
 loadTickets();
 
+tableBody.addEventListener("click",(e)=>{
+    const row=e.target.closest("tr");
+    if(!row||!row.dataset.id) return;
+
+    window.location.href= `ticket-detail.html?id=${row.dataset.id}`;
+})
 
