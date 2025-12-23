@@ -25,15 +25,22 @@ async function loadTickets() {
         }
 
         tickets.forEach(t => {
+            const ticketId = t._id?.$oid;
+            
             tableBody.innerHTML += `
-                <tr>
-                    <td>${t.id}</td>
+                <tr data-id="${t.ticket_id}" style="cursor:pointer;">
+                    <td>${t.ticket_id}</td>
                     <td>${t.title}</td>
                     <td>${t.category}</td>
                     <td>
-                        <span class="badge bg-${t.status === "Resolved" ? "success" : "danger"}">
-                            ${t.status}
+                        <span class="badge ${
+                            t.status==="open"? "bg-warning":
+                            t.status==="in_progress"?"bg-info":
+                            "bg-success"
+                        }">
+                        ${t.status.replace("_","").toUpperCase()}
                         </span>
+                        
                     </td>
                     <td>${t.created_at || "-"}</td>
                 </tr>`;
@@ -51,4 +58,10 @@ async function loadTickets() {
 
 loadTickets();
 
+tableBody.addEventListener("click",(e)=>{
+    const row=e.target.closest("tr");
+    if(!row||!row.dataset.id) return;
+
+    window.location.href= `ticket-detail.html?id=${row.dataset.id}`;
+});
 
